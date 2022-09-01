@@ -13,57 +13,43 @@ TennisGame1.prototype.wonPoint = function(playerName) {
 };
 
 TennisGame1.prototype.getTieScoreDescription = function(tiedScore) {
-    let score;
-    switch (tiedScore) {
-        case 0:
-            score = "Love-All";
-            break;
-        case 1:
-            score = "Fifteen-All";
-            break;
-        case 2:
-            score = "Thirty-All";
-            break;
-        default:
-            score = "Deuce";
-            break;
-    }
-    return score;
+    if (tiedScore >= 3 )
+        return "Deuce";
+    return this.getScoreDescriptionFromNumericScore(this.m_score1) + "-All";
 }
 
  TennisGame1.prototype.getGamePointDescription = function() {
-    var minusResult = this.m_score1 - this.m_score2;
-    if (minusResult === 1) return "Advantage player1";
-    else if (minusResult === -1) return "Advantage player2";
-    else if (minusResult >= 2) return "Win for player1";
-    else return "Win for player2";
+    const leader = this.m_score1 > this.m_score2 ? "player1" : "player2";
+    const absoluteScoreDifference = Math.abs(this.m_score1 - this.m_score2);
+
+    if (absoluteScoreDifference === 1)
+        return "Advantage " + leader;
+    return "Win for " + leader;
+}
+
+TennisGame1.prototype.getScoreDescriptionFromNumericScore = function(numericScore) {
+    let scoreDescription = "";
+    switch (numericScore) {
+        case 0:
+            scoreDescription = "Love";
+            break;
+        case 1:
+            scoreDescription = "Fifteen";
+            break;
+        case 2:
+            scoreDescription = "Thirty";
+            break;
+        case 3:
+            scoreDescription = "Forty";
+            break;
+    }
+    return scoreDescription;
 }
 
 TennisGame1.prototype.getStandardScoreDescription = function() {
-    let tempScore = 0;
-    let score = "";
-    for (let i = 1; i < 3; i++) {
-        if (i === 1) tempScore = this.m_score1;
-        else {
-            score += "-";
-            tempScore = this.m_score2;
-        }
-        switch (tempScore) {
-            case 0:
-                score += "Love";
-                break;
-            case 1:
-                score += "Fifteen";
-                break;
-            case 2:
-                score += "Thirty";
-                break;
-            case 3:
-                score += "Forty";
-                break;
-        }
-    }
-    return score;
+    return this.getScoreDescriptionFromNumericScore(this.m_score1)
+        + "-"
+        + this.getScoreDescriptionFromNumericScore(this.m_score2);
 }
 
 TennisGame1.prototype.isTieGame = function() {
